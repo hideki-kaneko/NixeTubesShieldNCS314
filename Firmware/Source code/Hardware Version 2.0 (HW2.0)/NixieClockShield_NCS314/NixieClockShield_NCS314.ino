@@ -1,5 +1,6 @@
  const String FirmwareVersion = "018300";
 #define HardwareVersion "NCS314 for HW 2.x"
+//#### MOD FW - STEINS;GATE EDITION VER1.00 ####
 //Format                _X.XXX_
 //NIXIE CLOCK SHIELD NCS314 v 2.x by GRA & AFCH (fominalec@gmail.com)
 //1.83  02.08.2018 (Driver v 1.1 is required)
@@ -686,7 +687,7 @@ void loop() {
       break;
     case DateIndex: //date mode
       if (!transactionInProgress) stringToDisplay = updateDateString();
-      dotPattern = B01000000; //turn on lower dots
+      dotPattern = B10000000; //turn on upper dots
       checkAlarmTime();
       blankMask = B00000000;
       break;
@@ -744,16 +745,17 @@ void loop() {
       }
         else 
         {
-          stringToDisplay="123199";
-          blinkPattern[DateDayIndex]=B00001100;
-          blinkPattern[DateMonthIndex]=B00000011;
+          stringToDisplay="991231";
+          blinkPattern[DateDayIndex]=B00110000;
+          blinkPattern[DateMonthIndex]=B00001100;
+          blinkPattern[DateYearIndex]=B00000011;
         }
      break; 
      case DateDayIndex:
      case DateMonthIndex:
      case DateYearIndex:
       if (value[DateFormatIndex] == EU_DateFormat) stringToDisplay=PreZero(value[DateDayIndex])+PreZero(value[DateMonthIndex])+PreZero(value[DateYearIndex]);
-        else stringToDisplay=PreZero(value[DateMonthIndex])+PreZero(value[DateDayIndex])+PreZero(value[DateYearIndex]);
+        else stringToDisplay=PreZero(value[DateYearIndex])+PreZero(value[DateMonthIndex])+PreZero(value[DateDayIndex]);
      break;
   }
 //  IRresults.value=0;
@@ -1252,12 +1254,12 @@ void modesChanger()
       if (TempPresent)
       {
         if (menuPosition == TimeIndex) stringToDisplay = antiPoisoning2(updateTemperatureString(getTemperature(value[DegreesFormatIndex])), getTimeNow());
-        if (menuPosition == DateIndex) stringToDisplay = antiPoisoning2(getTimeNow(), PreZero(day()) + PreZero(month()) + PreZero(year() % 1000) );
+        if (menuPosition == DateIndex) stringToDisplay = antiPoisoning2(getTimeNow(), PreZero(year() % 1000) + PreZero(month()) + PreZero(day()) ); //TODO: switch by date format
         if (menuPosition == TemperatureIndex) stringToDisplay = antiPoisoning2(PreZero(day()) + PreZero(month()) + PreZero(year() % 1000), updateTemperatureString(getTemperature(value[DegreesFormatIndex])));
       } else
       {
         if (menuPosition == TimeIndex) stringToDisplay = antiPoisoning2(PreZero(day()) + PreZero(month()) + PreZero(year() % 1000), getTimeNow());
-        if (menuPosition == DateIndex) stringToDisplay = antiPoisoning2(getTimeNow(), PreZero(day()) + PreZero(month()) + PreZero(year() % 1000) );
+        if (menuPosition == DateIndex) stringToDisplay = antiPoisoning2(getTimeNow(), PreZero(year() % 1000) + PreZero(month()) + PreZero(day()) );
       }
       // Serial.println("StrTDInToModeChng="+stringToDisplay);
     }
@@ -1311,7 +1313,7 @@ String updateDateString()
   {
     lastTimeDateUpdate = millis();
     if (value[DateFormatIndex]==EU_DateFormat) DateString = PreZero(day()) + PreZero(month()) + PreZero(year() % 1000);
-      else DateString = PreZero(month()) + PreZero(day()) + PreZero(year() % 1000);
+      else DateString = PreZero(year() % 1000) + PreZero(month()) + PreZero(day());
   }
   return DateString;
 }
