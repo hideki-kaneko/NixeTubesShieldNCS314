@@ -1207,6 +1207,10 @@ void checkAlarmTime()
   {
     lastTimeAlarmTriggired = millis();
     Alarm1SecondBlock = true;
+    if (isNixieOn == false){
+      isNixieOn = true;
+      digitalWrite(LEpin, HIGH);
+    }
     Serial.println(F("Wake up, Neo!"));
     p = song;
   }
