@@ -1,6 +1,9 @@
  const String FirmwareVersion = "018300";
 #define HardwareVersion "NCS314 for HW 2.x"
 //#### MOD FW - STEINS;GATE EDITION VER1.00 ####
+// LED on/off: long press "up" button
+// Nixie on/off: long press "down" button
+
 //Format                _X.XXX_
 //NIXIE CLOCK SHIELD NCS314 v 2.x by GRA & AFCH (fominalec@gmail.com)
 //1.83  02.08.2018 (Driver v 1.1 is required)
@@ -320,6 +323,8 @@ long modesChangePeriod = timeModePeriod;
 
 bool GPS_sync_flag=false;
 
+bool isNixieOn=true; // turn on nixie tubes
+
 /*******************************************************************************************************
   Init Programm
 *******************************************************************************************************/
@@ -477,7 +482,10 @@ void loop() {
   }
 
   if ((menuPosition == TimeIndex) || (modeChangedByUser == false) ) modesChanger();
-  doIndication();
+
+  if (isNixieOn){
+    doIndication();
+  }
 
   setButton.Update();
   upButton.Update();
@@ -662,17 +670,23 @@ void loop() {
     if ((upButton.clicks < 0) || (UpButtonState == -1))
     {
       tone1.play(1000, 100);
-      RGBLedsOn = true;
-      EEPROM.write(RGBLEDsEEPROMAddress, 1);
-      Serial.println(F("RGB=on"));
-      setLEDsFromEEPROM();
+      RGBLedsOn = !RGBLedsOn;
+      EEPROM.write(RGBLEDsEEPROMAddress, int(RGBLedsOn));
+      Serial.println(F("RGB="));
+      Serial.println(RGBLedsOn);
+      if(RGBLedsOn){
+        setLEDsFromEEPROM();
+      }
     }
     if ((downButton.clicks < 0) || (DownButtonState == -1))
     {
       tone1.play(1000, 100);
-      RGBLedsOn = false;
-      EEPROM.write(RGBLEDsEEPROMAddress, 0);
-      Serial.println(F("RGB=off"));
+      if(isNixieOn){
+        digitalWrite(LEpin, LOW);
+      }
+      isNixieOn = !isNixieOn;
+      Serial.println(F("Nixie="));
+      Serial.println(isNixieOn);
     }
   }
 
