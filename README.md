@@ -1,3 +1,13 @@
+# ダイバージェンスメーター　日本用カスタムファームウェア
+
+## 説明
+ニキシー管時計NSC314（HW2.0～2.2）用のカスタムファームウェアです。オリジナル版との相違は以下の通りです。
+
+- 音楽「Gate of steiner」を追加、デフォルトの曲をこれに変更
+- 日付フォーマットを日本式YY:MM:DDに変更（日付のモード切り替えを利用してください）
+- 消灯機能追加（down ボタン長押しでニキシー管の点灯切替可能　アラームをセットすると、時間になったら点灯します）
+- LED関連のボタン変更（up ボタン長押しでON/OFF切り替え　その他は同じ）
+
 # Nixe Tubes Shield NCS314 and NCS312
 Sketch for Arduino UNO and Nixie Tubes Shield NCS314 and NCS312 by GRA &amp; AFCH
 1. This repository content sources of project for Nixie Clock developed by GRA & AFCH.
